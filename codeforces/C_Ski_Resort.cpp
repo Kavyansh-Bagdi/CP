@@ -11,7 +11,8 @@ using namespace std;
 #define pp pop_back
 #define ff first
 #define ss second
-#define PI 3.141592653589793238462 #define all(x)(x).begin(), (x).end()
+#define PI 3.141592653589793238462
+#define all(x) (x).begin(), (x).end()
 
 using ll = long long;
 using ull = unsigned long long;
@@ -21,44 +22,38 @@ using vvi = vector<vi>;
 using pii = pair<int, int>;
 using vpii = vector<pii>;
 
-struct compare {
-    bool operator()(const pii& a, const pii& b) {
-        if (a.first == b.first) {
-            return a.second < b.second;
-        }
-        return a.first > b.first;
-    }
-};
-
 int main() {
     fastio();
-
     int T;
     cin >> T;
-
     for (int t = 0; t < T; t++) {
-        int n, k;
-        cin >> n >> k;
+        int n, k, q;
+        cin >> n >> k >> q;
 
         vi arr(n);
-
         for (int i = 0; i < n; i++) {
             cin >> arr[i];
         }
-        vpii updated_arr(n);
-        for (int i = 0; i < n; i++) {
-            updated_arr[i] = {arr[i] % k, i + 1};
-            if (arr[i] % k == 0) {
-                updated_arr[i] = {k, i + 1};
+
+        long long ans = 0;
+        int idx = 0;
+        while (idx < n) {
+            if (arr[idx] > q)
+                idx++;
+            else {
+                int j = idx;
+                while (j < n && arr[j] <= q)
+                    j++;
+
+                if (j - idx >= k) {
+                    ans += 1LL * (j - idx - k + 1) * (j - idx - k + 2) / 2;
+                }
+
+                idx = j;
             }
         }
 
-        sort(updated_arr.begin(), updated_arr.end(), compare());
-
-        for (int i = 0; i < n; i++) {
-            cout << updated_arr[i].second << " ";
-        }
-        cout << nline;
+        cout << ans << nline;
     }
     return 0;
 }
